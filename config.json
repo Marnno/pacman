@@ -1,0 +1,73 @@
+{
+    
+    "player": {
+        "lives": 3,
+        "color": "yellow",
+        "player_speed": 7
+    },
+
+    "ghosts": {
+        "count": 4,
+        "default_speed": 7,
+        "frightened_speed": 5,
+
+        "individual": [
+            {
+                "name": "Blinky",
+                "color": "red",
+                "behavior": "chase",
+                "speed": 3
+            },
+
+            {
+                "name": "Pinky",
+                "color": "pink",
+                "behavior": "ambush",
+                "speed": 3
+            },
+
+            {
+                "name": "Inky",
+                "color": "cyan",
+                "behavior": "flank",
+                "speed": 3
+            },
+
+            {
+                "name": "Clyde",
+                "color": "orange",
+                "behavior": "random",
+                "speed": 2.5
+            }
+        ]
+    },
+    
+    "level": {
+        "dimensions": [
+            {"width": 15, "height":15},
+            {"width": 19, "height": 15},
+            {"width": 21, "height": 17},
+            {"width": 17, "height": 21},
+            {"width": 23, "height": 19},
+            {"width": 25, "height": 21},
+            {"width": 21, "height": 25},
+            {"width": 27, "height": 23},
+            {"width": 29, "height": 25},
+            {"width": 25, "height": 29},
+            {"width": 31, "height": 27},
+            {"width": 33, "height": 31}
+        ],
+        "level_max_time": 90
+    },
+    
+    "score": {
+        "highscore_filename": "highscores.json",
+        "seed": 43,
+        "pacgum": 43,
+        "super_pacgum": 5,
+        "pts_per_pacgum": 10,
+        "pts_per_super_pacgum": 50,
+        "pts_per_ghost": 200
+    }
+
+}
