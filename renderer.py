@@ -4,19 +4,19 @@ Only pygame functions that have an MLX equivalent are used:
 Surface (mlx_new_image), set_at (pixel write), fill (mlx_clear_window)
 and blit (mlx_put_image_to_window).
 """
-
-import colorsys
 import pygame
+import colorsys
+
 
 from maze import Maze, NORTH, EAST, SOUTH, WEST
-
+from player import Player
 Color = tuple[int, int, int]
 
 BACKGROUND: Color = (0, 20, 0)
 WALL: Color = (0, 0, 255)
 BLOCKED: Color = (255, 255, 0)
 WALL_INNER: Color = (0, 0, 0)
-WALL_RATIO = 5
+WALL_RATIO = 8
 
 
 class Renderer:
@@ -32,6 +32,11 @@ class Renderer:
         self.screen: pygame.Surface = screen
         self.cell: int = cell
         self.wall: int = max(1, cell // WALL_RATIO)
+        self.pac_man: list[pygame.Surface] = [
+            pygame.image.load("./assets/player/player_0.png"),
+            pygame.image.load("./assets/player/player_1.png"),
+            pygame.image.load("./assets/player/player_2.png"),
+            pygame.image.load("./assets/player/player_3.png")]
 
     @staticmethod
     def draw_rect(surface: pygame.Surface, x: int, y: int,
@@ -191,13 +196,16 @@ class Renderer:
                     self.draw_rect(surface, gx * c - k, gy * c - k,
                                    2 * k, 2 * k, WALL_INNER)
 
-    def draw(self, maze_surface: pygame.Surface) -> None:
+    def draw(self, maze_surface: pygame.Surface, player: Player) -> None:
         """Draw one frame.
 
         Args:
             maze_surface: Surface returned by build_maze_surface.
+            player: The player to draw on top of the maze.
         """
         self.screen.fill(BACKGROUND)
         x = (self.screen.get_width() - maze_surface.get_width()) // 2
         y = (self.screen.get_height() - maze_surface.get_height()) // 2
         self.screen.blit(maze_surface, (x, y))
+        self.screen.blit(self.pac_man[0], (player.player_pos()[
+                         0] * self.cell + x, player.player_pos()[1] * self.cell + y))

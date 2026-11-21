@@ -28,18 +28,19 @@ class Menu:
         self.selected: int = 0
         self.font: pygame.font.Font = pygame.font.Font(None, FONT_SIZE)
         self.images: list[pygame.Surface] = [
-            pygame.image.load("./assets/btn_start.png"),
-            pygame.image.load("./assets/btn_highscores.png"),
-            pygame.image.load("./assets/btn_instructions.png"),
-            pygame.image.load("./assets/btn_exit.png"),
+            pygame.image.load("./assets/menu/btn_start.png"),
+            pygame.image.load("./assets/menu/btn_highscores.png"),
+            pygame.image.load("./assets/menu/btn_instructions.png"),
+            pygame.image.load("./assets/menu/btn_exit.png"),
         ]
         self.images_hoover: list[pygame.Surface] = [
-            pygame.image.load("./assets/btn_start_hover.png"),
-            pygame.image.load("./assets/btn_highscores_hover.png"),
-            pygame.image.load("./assets/btn_instructions_hover.png"),
-            pygame.image.load("./assets/btn_exit_hover.png"),
+            pygame.image.load("./assets/menu/btn_start_hover.png"),
+            pygame.image.load("./assets/menu/btn_highscores_hover.png"),
+            pygame.image.load("./assets/menu/btn_instructions_hover.png"),
+            pygame.image.load("./assets/menu/btn_exit_hover.png"),
         ]
-        self.title: pygame.Surface = pygame.image.load("./assets/title.png")
+        self.title: pygame.Surface = pygame.image.load(
+            "./assets/menu/title.png")
         self.hovered: int | None = None
         self.positions: list[tuple[int, int]] = []
         total_h = (self.title.get_height() + TITLE_GAP

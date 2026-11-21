@@ -8,10 +8,11 @@ from maze import Maze
 from renderer import Renderer
 from enum import Enum, auto
 from menu import Menu
-
+from player import Player
+from maze import DIRECTIONS
 
 FPS = 60
-SCREEN_RATIO = 0.9
+SCREEN_RATIO = 0.95
 MAX_CELL = 100
 MIN_CELL = 4
 
@@ -29,7 +30,7 @@ class GameState(Enum):
 class Game:
     """Own the window and run the game loop."""
 
-    def __init__(self, width: int = 22, height: int = 22,
+    def __init__(self, width: int = 31, height: int = 31,
                  seed: int = 4) -> None:
         """Generate the first level and open the window.
 
@@ -56,6 +57,7 @@ class Game:
         self.running: bool = False
         self.state = GameState.MAIN_MENU
         self.menu = Menu(self.screen)
+        self.player = Player(self.maze)
 
     @staticmethod
     def fit_cell(width: int, height: int) -> int:
@@ -98,6 +100,15 @@ class Game:
                     self.state = GameState.PLAYING
                 elif event == "Exit":
                     self.running = False
+            elif (self.state == GameState.PLAYING and event.type == pygame.KEYDOWN):
+                if event.key == pygame.K_w or event.key == pygame.K_UP:
+                    self.player.player_input(DIRECTIONS["NORTH"])
+                if event.key == pygame.K_d or event.key == pygame.K_RIGHT:
+                    self.player.player_input(DIRECTIONS["EAST"])
+                if event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                    self.player.player_input(DIRECTIONS["SOUTH"])
+                if event.key == pygame.K_a or event.key == pygame.K_LEFT:
+                    self.player.player_input(DIRECTIONS["WEST"])
 
     def update(self, dt: float) -> None:
         """Update the game logic (player, ghosts, timer...).
@@ -110,7 +121,7 @@ class Game:
     def draw(self) -> None:
         """Draw the current frame and show it."""
         if self.state == GameState.PLAYING:
-            self.renderer.draw(self.maze_surface)
+            self.renderer.draw(self.maze_surface, self.player)
         if self.state == GameState.MAIN_MENU:
             self.menu.draw()
         pygame.display.flip()
