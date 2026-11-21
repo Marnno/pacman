@@ -2,7 +2,7 @@ import json
 from error_models import ConfigError
 
 
-def pre_read(config_file: str) -> str:
+def pre_read(config_file: str) -> dict:
     try:
         with open(config_file, "r", encoding='utf-8') as file:
             lines = [
@@ -22,3 +22,8 @@ def pre_read(config_file: str) -> str:
 
     except OSError as e:
         raise ConfigError(f"[ERROR]: {e}") from e
+
+# A format checker
+# def format_checker() ->
+
+# Log file handler
