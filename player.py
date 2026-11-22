@@ -1,11 +1,15 @@
 from maze import DIRECTIONS, Maze
 
+MOUTH = [0, 1, 2, 3, 2, 1]
+FRAME_TIME = 0.05
+
 
 class Player:
     def __init__(self, maze: Maze) -> None:
         self.pos = [int(maze.width//2), int(maze.height // 2)]
         self.maze = maze
         self.timer = 0.0
+        self.anim_timer = 0.0
         self.current: int | None = None
         self.wanted: int | None = None
 
@@ -19,7 +23,12 @@ class Player:
     def player_input(self, direction: int) -> None:
         self.wanted = direction
 
+    def frame(self) -> int:
+        i = int(self.anim_timer / FRAME_TIME) % len(MOUTH)
+        return MOUTH[i]
+        
     def update(self, dt: float) -> None:
+        self.anim_timer +=dt
         self.timer += dt
         if self.timer >= 0.3:
             self.timer %= 0.3 

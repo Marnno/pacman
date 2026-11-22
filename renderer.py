@@ -6,7 +6,7 @@ fill (mlx_clear_window) and blit (mlx_put_image_to_window).
 """
 import pygame
 import colorsys
-
+import time
 
 from maze import Maze, NORTH, EAST, SOUTH, WEST
 from player import Player
@@ -226,5 +226,7 @@ class Renderer:
         self.screen.blit(maze_surface, (x, y))
         cell_x, cell_y = player.player_pos()
         offset = (self.cell - self.sprite_size) // 2
-        self.screen.blit(self.pac_man[0], (x + cell_x * self.cell + offset,
-                                           y + cell_y * self.cell + offset))
+        image = self.pac_man[player.frame()]
+        self.screen.blit(image, (x + cell_x * self.cell + offset,
+                                    y + cell_y * self.cell + offset))
+        
