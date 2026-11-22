@@ -1,7 +1,7 @@
 from maze import DIRECTIONS, Maze
 
 MOUTH = [0, 1, 2, 3, 2, 1]
-FRAME_TIME = 0.05
+FRAME_TIME = 0.1
 
 
 class Player:
@@ -26,7 +26,7 @@ class Player:
     def frame(self) -> int:
         i = int(self.anim_timer / FRAME_TIME) % len(MOUTH)
         return MOUTH[i]
-        
+
     def update(self, dt: float) -> None:
         self.anim_timer +=dt
         self.timer += dt
