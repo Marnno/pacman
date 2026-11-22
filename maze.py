@@ -8,11 +8,11 @@ SOUTH = 4
 WEST = 8
 BLOCKED = 15
 
-DIRECTIONS: dict[str, tuple[int, int]] = {
-    "NORTH": (0, -1),
-    "EAST": (1, 0),
-    "SOUTH": (0, 1),
-    "WEST": (-1, 0),
+DIRECTIONS: dict[int, tuple[int, int]] = {
+    NORTH: (0, -1),
+    EAST: (1, 0),
+    SOUTH: (0, 1),
+    WEST: (-1, 0),
 }
 
 

@@ -1,8 +1,8 @@
 """Drawing of the game with pygame.
 
 Only pygame functions that have an MLX equivalent are used:
-Surface (mlx_new_image), set_at (pixel write), fill (mlx_clear_window)
-and blit (mlx_put_image_to_window).
+Surface (mlx_new_image), get_at (pixel read), set_at (pixel write),
+fill (mlx_clear_window) and blit (mlx_put_image_to_window).
 """
 import pygame
 import colorsys
@@ -12,7 +12,7 @@ from maze import Maze, NORTH, EAST, SOUTH, WEST
 from player import Player
 Color = tuple[int, int, int]
 
-BACKGROUND: Color = (0, 20, 0)
+BACKGROUND: Color = (0, 0, 0)
 WALL: Color = (0, 0, 255)
 BLOCKED: Color = (255, 255, 0)
 WALL_INNER: Color = (0, 0, 0)
@@ -32,11 +32,28 @@ class Renderer:
         self.screen: pygame.Surface = screen
         self.cell: int = cell
         self.wall: int = max(1, cell // WALL_RATIO)
+        self.sprite_size: int = max(1, cell - 2 * self.wall)
         self.pac_man: list[pygame.Surface] = [
-            pygame.image.load("./assets/player/player_0.png"),
-            pygame.image.load("./assets/player/player_1.png"),
-            pygame.image.load("./assets/player/player_2.png"),
-            pygame.image.load("./assets/player/player_3.png")]
+            self.resize(pygame.image.load(f"./assets/player/player{i}.png"),
+                        self.sprite_size)
+            for i in range(1, 5)]
+
+    @staticmethod
+    def resize(image: pygame.Surface, size: int) -> pygame.Surface:
+        """Return a square copy of an image, resized pixel by pixel.
+
+        Args:
+            image: Image to resize.
+            size: Width and height of the copy in pixels.
+        """
+        width, height = image.get_size()
+        resized = pygame.Surface((size, size), pygame.SRCALPHA)
+        for py in range(size):
+            for px in range(size):
+                src = ((2 * px + 1) * width // (2 * size),
+                       (2 * py + 1) * height // (2 * size))
+                resized.set_at((px, py), image.get_at(src))
+        return resized
 
     @staticmethod
     def draw_rect(surface: pygame.Surface, x: int, y: int,
@@ -207,5 +224,7 @@ class Renderer:
         x = (self.screen.get_width() - maze_surface.get_width()) // 2
         y = (self.screen.get_height() - maze_surface.get_height()) // 2
         self.screen.blit(maze_surface, (x, y))
-        self.screen.blit(self.pac_man[0], (player.player_pos()[
-                         0] * self.cell + x, player.player_pos()[1] * self.cell + y))
+        cell_x, cell_y = player.player_pos()
+        offset = (self.cell - self.sprite_size) // 2
+        self.screen.blit(self.pac_man[0], (x + cell_x * self.cell + offset,
+                                           y + cell_y * self.cell + offset))

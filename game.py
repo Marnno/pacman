@@ -9,7 +9,7 @@ from renderer import Renderer
 from enum import Enum, auto
 from menu import Menu
 from player import Player
-from maze import DIRECTIONS
+from maze import EAST, NORTH, SOUTH, WEST
 
 FPS = 60
 SCREEN_RATIO = 0.95
@@ -30,7 +30,7 @@ class GameState(Enum):
 class Game:
     """Own the window and run the game loop."""
 
-    def __init__(self, width: int = 31, height: int = 31,
+    def __init__(self, width: int = 21, height: int = 21,
                  seed: int = 4) -> None:
         """Generate the first level and open the window.
 
@@ -102,13 +102,13 @@ class Game:
                     self.running = False
             elif (self.state == GameState.PLAYING and event.type == pygame.KEYDOWN):
                 if event.key == pygame.K_w or event.key == pygame.K_UP:
-                    self.player.player_input(DIRECTIONS["NORTH"])
+                    self.player.player_input(NORTH)
                 if event.key == pygame.K_d or event.key == pygame.K_RIGHT:
-                    self.player.player_input(DIRECTIONS["EAST"])
+                    self.player.player_input(EAST)
                 if event.key == pygame.K_s or event.key == pygame.K_DOWN:
-                    self.player.player_input(DIRECTIONS["SOUTH"])
+                    self.player.player_input(SOUTH)
                 if event.key == pygame.K_a or event.key == pygame.K_LEFT:
-                    self.player.player_input(DIRECTIONS["WEST"])
+                    self.player.player_input(WEST)
 
     def update(self, dt: float) -> None:
         """Update the game logic (player, ghosts, timer...).
@@ -116,7 +116,8 @@ class Game:
         Args:
             dt: Time elapsed since the last frame, in seconds.
         """
-        pass
+        if self.state == GameState.PLAYING:
+            self.player.update(dt)
 
     def draw(self) -> None:
         """Draw the current frame and show it."""
