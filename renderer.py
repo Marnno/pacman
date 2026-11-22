@@ -10,6 +10,7 @@ import time
 
 from maze import Maze, NORTH, EAST, SOUTH, WEST
 from player import Player
+from player2 import Player2
 Color = tuple[int, int, int]
 
 BACKGROUND: Color = (0, 0, 0)
@@ -242,21 +243,23 @@ class Renderer:
                     self.draw_rect(surface, gx * c - k, gy * c - k,
                                    2 * k, 2 * k, WALL_INNER)
 
-    def draw(self, maze_surface: pygame.Surface, player: Player) -> None:
+    def draw(self, maze_surface: pygame.Surface,
+             *players: Player | Player2) -> None:
         """Draw one frame.
 
         Args:
             maze_surface: Surface returned by build_maze_surface.
-            player: The player to draw on top of the maze.
+            players: The players to draw, the last one on top.
         """
         self.screen.fill(BACKGROUND)
         x = (self.screen.get_width() - maze_surface.get_width()) // 2
         y = (self.screen.get_height() - maze_surface.get_height()) // 2
         self.screen.blit(maze_surface, (x, y))
-        cell_x, cell_y = player.player_pos()
         offset = (self.cell - self.sprite_size) // 2
-        direction, index = player.frame()
-        image = self.pac_man[direction][index]
-        self.screen.blit(image, (x + cell_x * self.cell + offset,
-                                    y + cell_y * self.cell + offset))
+        for player in players:
+            cell_x, cell_y = player.player_pos()
+            direction, index = player.frame()
+            image = self.pac_man[direction][index]
+            self.screen.blit(image, (x + cell_x * self.cell + offset,
+                                     y + cell_y * self.cell + offset))
         

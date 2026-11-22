@@ -9,6 +9,7 @@ from renderer import Renderer
 from enum import Enum, auto
 from menu import Menu
 from player import Player
+from player2 import Player2
 from maze import EAST, NORTH, SOUTH, WEST
 
 FPS = 60
@@ -58,6 +59,7 @@ class Game:
         self.state = GameState.MAIN_MENU
         self.menu = Menu(self.screen)
         self.player = Player(self.maze)
+        self.player2 = Player2(self.maze)
 
     @staticmethod
     def fit_cell(width: int, height: int) -> int:
@@ -101,14 +103,24 @@ class Game:
                 elif event == "Exit":
                     self.running = False
             elif (self.state == GameState.PLAYING and event.type == pygame.KEYDOWN):
-                if event.key == pygame.K_w or event.key == pygame.K_UP:
+                # Player 1: WASD
+                if event.key == pygame.K_w:
                     self.player.player_input(NORTH)
-                if event.key == pygame.K_d or event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_d:
                     self.player.player_input(EAST)
-                if event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                if event.key == pygame.K_s:
                     self.player.player_input(SOUTH)
-                if event.key == pygame.K_a or event.key == pygame.K_LEFT:
+                if event.key == pygame.K_a:
                     self.player.player_input(WEST)
+                # Player 2: arrows
+                if event.key == pygame.K_UP:
+                    self.player2.player_input(NORTH)
+                if event.key == pygame.K_RIGHT:
+                    self.player2.player_input(EAST)
+                if event.key == pygame.K_DOWN:
+                    self.player2.player_input(SOUTH)
+                if event.key == pygame.K_LEFT:
+                    self.player2.player_input(WEST)
 
     def update(self, dt: float) -> None:
         """Update the game logic (player, ghosts, timer...).
@@ -118,11 +130,12 @@ class Game:
         """
         if self.state == GameState.PLAYING:
             self.player.update(dt)
+            self.player2.update(dt)
 
     def draw(self) -> None:
         """Draw the current frame and show it."""
         if self.state == GameState.PLAYING:
-            self.renderer.draw(self.maze_surface, self.player)
+            self.renderer.draw(self.maze_surface, self.player, self.player2)
         if self.state == GameState.MAIN_MENU:
             self.menu.draw()
         pygame.display.flip()
