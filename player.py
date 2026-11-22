@@ -1,4 +1,4 @@
-from maze import DIRECTIONS, Maze
+from maze import DIRECTIONS, EAST, Maze
 
 MOUTH = [0, 1, 2, 3, 2, 1]
 FRAME_TIME = 0.1
@@ -23,9 +23,10 @@ class Player:
     def player_input(self, direction: int) -> None:
         self.wanted = direction
 
-    def frame(self) -> int:
+    def frame(self) -> tuple[int, int]:
         i = int(self.anim_timer / FRAME_TIME) % len(MOUTH)
-        return MOUTH[i]
+        direction = EAST if self.current is None else self.current
+        return direction, MOUTH[i]
 
     def update(self, dt: float) -> None:
         self.anim_timer +=dt

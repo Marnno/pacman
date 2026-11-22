@@ -33,10 +33,13 @@ class Renderer:
         self.cell: int = cell
         self.wall: int = max(1, cell // WALL_RATIO)
         self.sprite_size: int = max(1, cell - 2 * self.wall)
-        self.pac_man: list[pygame.Surface] = [
+        right: list[pygame.Surface] = [
             self.resize(pygame.image.load(f"./assets/player/player{i}.png"),
                         self.sprite_size)
             for i in range(1, 5)]
+        self.pac_man: dict[int, list[pygame.Surface]] = {
+            direction: [self.orient(image, direction) for image in right]
+            for direction in (NORTH, EAST, SOUTH, WEST)}
 
     @staticmethod
     def resize(image: pygame.Surface, size: int) -> pygame.Surface:
@@ -54,6 +57,32 @@ class Renderer:
                        (2 * py + 1) * height // (2 * size))
                 resized.set_at((px, py), image.get_at(src))
         return resized
+
+    @staticmethod
+    def orient(image: pygame.Surface, direction: int) -> pygame.Surface:
+        """Return a copy of a square image that looks right, turned.
+
+        West is a mirror, not a 180 degrees rotation, to keep the eye on top.
+
+        Args:
+            image: Square image looking to the east.
+            direction: One of NORTH, EAST, SOUTH, WEST.
+        """
+        size = image.get_width()
+        last = size - 1
+        turned = pygame.Surface((size, size), pygame.SRCALPHA)
+        for py in range(size):
+            for px in range(size):
+                if direction == NORTH:
+                    src = (last - py, px)
+                elif direction == SOUTH:
+                    src = (py, last - px)
+                elif direction == WEST:
+                    src = (last - px, py)
+                else:
+                    src = (px, py)
+                turned.set_at((px, py), image.get_at(src))
+        return turned
 
     @staticmethod
     def draw_rect(surface: pygame.Surface, x: int, y: int,
@@ -226,7 +255,8 @@ class Renderer:
         self.screen.blit(maze_surface, (x, y))
         cell_x, cell_y = player.player_pos()
         offset = (self.cell - self.sprite_size) // 2
-        image = self.pac_man[player.frame()]
+        direction, index = player.frame()
+        image = self.pac_man[direction][index]
         self.screen.blit(image, (x + cell_x * self.cell + offset,
                                     y + cell_y * self.cell + offset))
         
