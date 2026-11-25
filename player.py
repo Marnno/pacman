@@ -29,7 +29,7 @@ class Player:
         return direction, MOUTH[i]
 
     def update(self, dt: float) -> None:
-        self.anim_timer +=dt
+        self.anim_timer += dt
         self.timer += dt
         if self.timer >= 0.3:
             self.timer %= 0.3 
